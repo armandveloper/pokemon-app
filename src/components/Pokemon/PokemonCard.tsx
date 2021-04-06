@@ -6,6 +6,7 @@ import Spinner from '../ui/Spinner';
 
 interface PokemonCardProps {
 	pokemonId: number;
+	name: string;
 }
 
 interface PokemonCardStyledProps {
@@ -31,7 +32,7 @@ const PokemonCardStyled = styled.li<PokemonCardStyledProps>`
 	background-color: ${(props) => props.backgroundColor};
 	border-radius: 0.5rem;
 	cursor: pointer;
-	height: ${(props) => (props.isLoading ? '8.5rem' : '20rem')};
+	height: ${(props) => (props.isLoading ? '10rem' : '20rem')};
 	padding: 1.5rem 0.4rem;
 	padding-right: ${(props) => (props.isLoading ? '1rem' : '0.4rem')};
 	width: 100%;
@@ -42,6 +43,7 @@ const PokemonCardStyled = styled.li<PokemonCardStyledProps>`
 		font-weight: 500;
 		letter-spacing: 0.5px;
 		margin: 0 0 0rem 1rem;
+		text-transform: capitalize;
 	}
 	img {
 		display: block;
@@ -59,7 +61,7 @@ const PokemonCardStyled = styled.li<PokemonCardStyledProps>`
 	}
 `;
 
-function PokemonCard({ pokemonId }: PokemonCardProps) {
+function PokemonCard({ pokemonId, name }: PokemonCardProps) {
 	const artworkUrl: string = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
 
 	const { data, loading, error } = usePalette(artworkUrl);
@@ -68,10 +70,10 @@ function PokemonCard({ pokemonId }: PokemonCardProps) {
 
 	return (
 		<PokemonCardStyled
-			backgroundColor={data.vibrant || 'gray'}
+			backgroundColor={data.muted || 'gray'}
 			isLoading={isImageLoading}
 		>
-			<p>Bulbasur</p>
+			<p>{name}</p>
 			{loading ? (
 				<Spinner align="right" />
 			) : !loading && error ? (

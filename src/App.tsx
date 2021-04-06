@@ -1,11 +1,10 @@
-import PokemonList from './components/Pokemon/PokemonList';
+import AppRouter from './routers/AppRouter';
 
 function App() {
 	return (
-		<div>
-			<h1>Pokedex</h1>
-			<PokemonList />
-		</div>
+		<>
+			<AppRouter />
+		</>
 	);
 }
 
