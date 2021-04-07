@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { usePalette } from 'react-palette';
 import { contrast } from '../../helpers/contrast-color';
@@ -14,20 +15,6 @@ interface PokemonCardStyledProps {
 	isLoading: boolean;
 }
 
-// const zoomIn = keyframes`
-//   from {
-//     transform: scale3d(0, 0, 0);
-//   }
-//   to {
-//     transform: scale3d(1, 1, 1);
-//   }
-// `;
-
-// const zoomInAnimation = () =>
-// 	css`
-// 		animation: ${zoomIn} 0.3s 0.5s ease forwards;
-// 	`;
-
 const PokemonCardStyled = styled.li<PokemonCardStyledProps>`
 	background-color: ${(props) => props.backgroundColor};
 	border-radius: 0.5rem;
@@ -37,6 +24,9 @@ const PokemonCardStyled = styled.li<PokemonCardStyledProps>`
 	padding-right: ${(props) => (props.isLoading ? '1rem' : '0.4rem')};
 	width: 100%;
 	transition: background-color 0.5s ease, height 0.5s ease;
+	a {
+		text-decoration: none;
+	}
 	p {
 		color: ${(props) => contrast(props.backgroundColor)};
 		font-size: 2rem;
@@ -68,10 +58,21 @@ function PokemonCard({ pokemonId, name }: PokemonCardProps) {
 
 	const [isImageLoading, setImageLoading] = useState(true);
 
+	const history = useHistory();
+
+	const handlePokemonPage = () => {
+		history.push(`/pokemon/${pokemonId}`, {
+			name,
+			bgc: data.muted,
+			artworkUrl,
+		});
+	};
+
 	return (
 		<PokemonCardStyled
 			backgroundColor={data.muted || 'gray'}
 			isLoading={isImageLoading}
+			onClick={handlePokemonPage}
 		>
 			<p>{name}</p>
 			{loading ? (

@@ -12,15 +12,13 @@ function AppRouter() {
 	return (
 		<Router basename="/pokemon-app">
 			<Switch>
-				<Route path="/" exact={true}>
-					<HomePage />
-				</Route>
-				<Route path="/search">
-					<SearchPage />
-				</Route>
-				<Route path="/pokemon/:id">
-					<PokemonPage />
-				</Route>
+				<Route path="/" exact={true} component={HomePage} />
+				<Route path="/search" exact={true} component={SearchPage} />
+				<Route
+					path="/pokemon/:id"
+					exact={true}
+					component={PokemonPage}
+				/>
 				<Redirect to="/" />
 			</Switch>
 		</Router>

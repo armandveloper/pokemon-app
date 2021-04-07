@@ -1,12 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import {
-	ResourceGeneralResponse,
-	Result,
-} from '../../interfaces/resource-general-response.interface';
+import { Result } from '../../interfaces/resource-general-response.interface';
+import { PokemonContext } from '../../context/PokemonContext';
 import Wrapper from '../layout/Wrapper';
-import PokemonCard from './PokemonCard';
 import Spinner from '../ui/Spinner';
+import PokemonCard from './PokemonCard';
 
 const PokemonListStyled = styled.ul`
 	list-style: none;
@@ -19,26 +17,20 @@ const PokemonListStyled = styled.ul`
 `;
 
 function PokemonList() {
-	const [pokemons, setPokemons] = useState<Result[]>([]);
-
-	const [page, setPage] = useState('https://pokeapi.co/api/v2/pokemon');
+	const { pokemonList, setPage, page } = useContext(PokemonContext);
 
 	const spinnerRef = useRef<HTMLDivElement>(null);
 
-	const nextPageRef = useRef<string | null>(null);
-
 	useEffect(() => {
-		const getPokemons = async () => {
-			if (!page) return;
-			const resp = await fetch(page);
-			const data: ResourceGeneralResponse = await resp.json();
-			setPokemons((pokemons) => [...pokemons, ...data.results]);
-			nextPageRef.current = data.next;
+		const handleObserver = (
+			entities: IntersectionObserverEntry[],
+			observer: IntersectionObserver
+		) => {
+			const target = entities[0];
+			if (target.isIntersecting) {
+				setPage();
+			}
 		};
-		getPokemons();
-	}, [page]);
-
-	useEffect(() => {
 		const options = {
 			root: null,
 			rootMargin: '10px',
@@ -52,22 +44,12 @@ function PokemonList() {
 		if (spinnerRef.current) {
 			observer.observe(spinnerRef.current);
 		}
-	}, []);
-
-	const handleObserver = (
-		entities: IntersectionObserverEntry[],
-		observer: IntersectionObserver
-	) => {
-		const target = entities[0];
-		if (target.isIntersecting) {
-			setPage(nextPageRef.current || '');
-		}
-	};
+	}, [setPage]);
 
 	return (
 		<Wrapper>
 			<PokemonListStyled>
-				{pokemons.map(({ name, url }: Result) => (
+				{pokemonList.map(({ name, url }: Result) => (
 					<PokemonCard
 						key={name}
 						name={name}
