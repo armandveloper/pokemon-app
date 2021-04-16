@@ -1,15 +1,62 @@
+// import { useState } from 'react';
 import styled from 'styled-components';
+import Wrapper from '../layout/Wrapper';
 import PokemonTypeList from './PokemonTypeList';
+import PokemonStats from './PokemonStats';
+import { PokemonInfo } from '../../interfaces/pokemon-info.interface';
+
+interface PokemonDetailsProps {
+	pokemon: PokemonInfo;
+}
 
 const PokemonDetailsStyled = styled.div`
 	color: #fff;
+	> div:first-of-type {
+		margin-top: 3rem;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		div {
+			text-align: center;
+		}
+		p {
+			font-size: 3rem;
+			font-weight: 700;
+			margin: 0;
+			span {
+				font-size: 1.8rem;
+			}
+		}
+	}
 `;
 
-function PokemonDetails() {
+function PokemonDetails({ pokemon }: PokemonDetailsProps) {
 	return (
-		<PokemonDetailsStyled>
-			<PokemonTypeList typeList={['fire', 'flying']} />
-		</PokemonDetailsStyled>
+		<Wrapper>
+			<PokemonDetailsStyled>
+				<PokemonTypeList typeList={pokemon.types} />
+				<div>
+					<div>
+						<p>{pokemon.order}</p>
+						<span>Order</span>
+					</div>
+					<div>
+						{/* decimeter / 10 = meter */}
+						<p>
+							{pokemon.height / 10} <span>M</span>
+						</p>
+						<span>Height</span>
+					</div>
+					<div>
+						{/* hectogram / 10 = kilogram */}
+						<p>
+							{pokemon.weight / 10} <span>KG</span>
+						</p>
+						<span>Weight</span>
+					</div>
+				</div>
+				<PokemonStats stats={pokemon.stats} />
+			</PokemonDetailsStyled>
+		</Wrapper>
 	);
 }
 

@@ -1,3 +1,4 @@
+import { useContext, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import styled from 'styled-components';
 import {
@@ -11,6 +12,8 @@ import PokemonTopClipped from '../components/Pokemon/PokemonTopClipped';
 import PokemonHeader from '../components/Pokemon/PokemonHeader';
 import PokemonTop from '../components/Pokemon/PokemonTop';
 import PokemonDetails from '../components/Pokemon/PokemonDetails';
+import Spinner from '../components/ui/Spinner';
+import { PokemonContext } from '../context/PokemonContext';
 
 const PokemonPageStyled = styled.div`
 	h1 {
@@ -29,6 +32,14 @@ function PokemonPage({
 	const { id } = match.params;
 	const { name, bgc, artworkUrl } = useBasicValues(location.state, id);
 
+	const [isLoading, setIsLoading] = useState(true);
+
+	const { getPokemonById, currentPokemon } = useContext(PokemonContext);
+
+	useEffect(() => {
+		getPokemonById(+id).then(() => setIsLoading(false));
+	}, [getPokemonById, id]);
+
 	return (
 		<PokemonPageStyled>
 			<PokemonTop color={contrast(bgc)}>
@@ -36,8 +47,12 @@ function PokemonPage({
 				<PokemonTopClipped bgc={bgc} />
 				<PokemonImage image={artworkUrl} />
 			</PokemonTop>
-			<h1>{name}</h1>
-			<PokemonDetails />
+			<h1>{name || currentPokemon.name}</h1>
+			{isLoading ? (
+				<Spinner align="center" />
+			) : (
+				<PokemonDetails pokemon={currentPokemon} />
+			)}
 		</PokemonPageStyled>
 	);
 }

@@ -38,7 +38,6 @@ function PokemonHeader({ id }: PokemonHeaderProps) {
 	const history = useHistory();
 
 	const handleGoBack = () => {
-		console.log('Go Back');
 		if (history.length === 2) {
 			return history.replace('/');
 		}

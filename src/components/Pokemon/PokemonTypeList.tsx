@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { pokemonTypeColors } from '../../helpers/pokemon';
+import { Type } from '../../interfaces/pokemon-info.interface';
 
 const PokemonTypeListStyled = styled.ul`
 	list-style: none;
@@ -9,7 +11,6 @@ const PokemonTypeListStyled = styled.ul`
 	justify-content: space-around;
 	li {
 		flex: 0.45;
-		background-color: tomato;
 		border-radius: 2rem;
 		padding: 0.8rem;
 		text-align: center;
@@ -18,11 +19,18 @@ const PokemonTypeListStyled = styled.ul`
 	}
 `;
 
-function PokemonTypeList({ typeList }: { typeList: string[] }) {
+function PokemonTypeList({ typeList }: { typeList: Type[] }) {
 	return (
 		<PokemonTypeListStyled>
 			{typeList.map((type) => (
-				<li key={type}>{type}</li>
+				<li
+					key={type.type.name}
+					style={{
+						backgroundColor: pokemonTypeColors.get(type.type.name),
+					}}
+				>
+					{type.type.name}
+				</li>
 			))}
 		</PokemonTypeListStyled>
 	);

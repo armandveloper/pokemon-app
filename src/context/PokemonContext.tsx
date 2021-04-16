@@ -6,6 +6,7 @@ import {
 	useRef,
 	useState,
 } from 'react';
+import { PokemonInfo } from '../interfaces/pokemon-info.interface';
 import {
 	ResourceGeneralResponse,
 	Result,
@@ -14,8 +15,10 @@ import {
 interface PokemonContextInterface {
 	pokemonList: Result[];
 	page: string;
+	currentPokemon: PokemonInfo;
 	getPokemon(): void;
 	setPage(): void;
+	getPokemonById(id: number): Promise<void>;
 }
 
 export const PokemonContext = createContext<PokemonContextInterface>(
@@ -42,13 +45,25 @@ export const PokemonProvider = ({ children }: { children: ReactNode }) => {
 		getPokemon();
 	}, [page, getPokemon]);
 
+	const [currentPokemon, setCurrentPokemon] = useState({} as PokemonInfo);
+
+	const getPokemonById = useCallback(async (id: number) => {
+		const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+
+		const data: PokemonInfo = await resp.json();
+
+		setCurrentPokemon(data);
+	}, []);
+
 	return (
 		<PokemonContext.Provider
 			value={{
 				pokemonList,
 				page,
+				currentPokemon,
 				getPokemon,
 				setPage: nextPage,
+				getPokemonById,
 			}}
 		>
 			{children}
