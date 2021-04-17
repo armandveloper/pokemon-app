@@ -16,9 +16,11 @@ interface PokemonContextInterface {
 	pokemonList: Result[];
 	page: string;
 	currentPokemon: PokemonInfo;
+	pokemonNotFoundError: boolean;
 	getPokemon(): void;
 	setPage(): void;
 	getPokemonById(id: number): Promise<void>;
+	setPokemonError(isError: boolean): void;
 }
 
 export const PokemonContext = createContext<PokemonContextInterface>(
@@ -48,12 +50,22 @@ export const PokemonProvider = ({ children }: { children: ReactNode }) => {
 	const [currentPokemon, setCurrentPokemon] = useState({} as PokemonInfo);
 
 	const getPokemonById = useCallback(async (id: number) => {
-		const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-
-		const data: PokemonInfo = await resp.json();
-
-		setCurrentPokemon(data);
+		try {
+			const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+			if (resp.status === 404) throw new Error('Pokemon not found');
+			const data: PokemonInfo = await resp.json();
+			setCurrentPokemon(data);
+		} catch (err) {
+			throw new Error(err);
+		}
 	}, []);
+
+	const [pokemonNotFoundError, setPokemonNotFoundError] = useState(false);
+
+	const setPokemonError = useCallback(
+		(isError: boolean) => setPokemonNotFoundError(isError),
+		[]
+	);
 
 	return (
 		<PokemonContext.Provider
@@ -64,6 +76,8 @@ export const PokemonProvider = ({ children }: { children: ReactNode }) => {
 				getPokemon,
 				setPage: nextPage,
 				getPokemonById,
+				pokemonNotFoundError,
+				setPokemonError,
 			}}
 		>
 			{children}

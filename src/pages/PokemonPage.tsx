@@ -5,6 +5,7 @@ import {
 	PokemonPageParams,
 	LocationState,
 } from '../interfaces/router.interface';
+import { PokemonContext } from '../context/PokemonContext';
 import { useBasicValues } from '../hooks/useBasicValues';
 import { contrast } from '../helpers/contrast-color';
 import PokemonImage from '../components/Pokemon/PokemonImage';
@@ -13,9 +14,11 @@ import PokemonHeader from '../components/Pokemon/PokemonHeader';
 import PokemonTop from '../components/Pokemon/PokemonTop';
 import PokemonDetails from '../components/Pokemon/PokemonDetails';
 import Spinner from '../components/ui/Spinner';
-import { PokemonContext } from '../context/PokemonContext';
+import { slideInUpAnimation } from '../animations';
 
 const PokemonPageStyled = styled.div`
+	${slideInUpAnimation};
+
 	h1 {
 		font-size: 3.6rem;
 		letter-spacing: 1.5px;
@@ -28,6 +31,7 @@ const PokemonPageStyled = styled.div`
 function PokemonPage({
 	match,
 	location,
+	history,
 }: RouteComponentProps<PokemonPageParams, {}, LocationState>) {
 	const { id } = match.params;
 	const { name, bgc, artworkUrl } = useBasicValues(location.state, id);
@@ -36,20 +40,43 @@ function PokemonPage({
 
 	const { getPokemonById, currentPokemon } = useContext(PokemonContext);
 
+	const { setPokemonError } = useContext(PokemonContext);
+
 	useEffect(() => {
-		getPokemonById(+id).then(() => setIsLoading(false));
-	}, [getPokemonById, id]);
+		getPokemonById(+id)
+			.then(() => {
+				setIsLoading(false);
+				setPokemonError(false);
+			})
+			.catch(() => {
+				// Error: muy probablemente a que el pokémon no existe
+				setPokemonError(true);
+				history.replace('/');
+			});
+	}, [getPokemonById, id, history, setPokemonError]);
+
+	// Coloca el estado de cargando en true nuevamente
+	useEffect(() => {
+		setIsLoading(true);
+	}, [id]);
+
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
 
 	return (
 		<PokemonPageStyled>
 			<PokemonTop color={contrast(bgc)}>
 				<PokemonHeader id={+id} />
 				<PokemonTopClipped bgc={bgc} />
-				<PokemonImage image={artworkUrl} />
+				<PokemonImage
+					image={artworkUrl}
+					name={name || currentPokemon.name}
+				/>
 			</PokemonTop>
-			<h1>{name || currentPokemon.name}</h1>
+			{!isLoading && <h1>{name || currentPokemon.name}</h1>}
 			{isLoading ? (
-				<Spinner align="center" />
+				<Spinner align="center" className="visible mt" />
 			) : (
 				<PokemonDetails pokemon={currentPokemon} />
 			)}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { usePalette } from 'react-palette';
@@ -52,13 +52,24 @@ const PokemonCardStyled = styled.li<PokemonCardStyledProps>`
 `;
 
 function PokemonCard({ pokemonId, name }: PokemonCardProps) {
-	const artworkUrl: string = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
+	const [artworkUrl, setArtworkUrl] = useState(
+		`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`
+	);
 
 	const { data, loading, error } = usePalette(artworkUrl);
 
 	const [isImageLoading, setImageLoading] = useState(true);
 
 	const history = useHistory();
+
+	useEffect(() => {
+		// Si la imagen no existe carga la del sprite frontal
+		if (error) {
+			setArtworkUrl(
+				`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`
+			);
+		}
+	}, [error, pokemonId]);
 
 	const handlePokemonPage = () => {
 		history.push(`/pokemon/${pokemonId}`, {

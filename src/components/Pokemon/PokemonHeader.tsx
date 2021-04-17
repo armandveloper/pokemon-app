@@ -22,8 +22,13 @@ const PokemonHeaderStyled = styled.header`
 		padding: 0.5rem;
 		display: inline-flex;
 		align-items: center;
+		transition: transform 0.3s ease;
 		&:focus {
 			outline: none;
+		}
+		&:hover,
+		&:focus {
+			transform: translate3d(-0.5rem, 0, 0);
 		}
 	}
 	span {
@@ -41,7 +46,7 @@ function PokemonHeader({ id }: PokemonHeaderProps) {
 		if (history.length === 2) {
 			return history.replace('/');
 		}
-		history.goBack();
+		history.push('/');
 	};
 
 	return (

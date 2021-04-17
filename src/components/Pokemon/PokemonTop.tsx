@@ -29,15 +29,23 @@ const PokemonTopStyled = styled.div<{ color: string }>`
 		transition: transform 0.3s ease;
 		&:first-child {
 			left: 1rem;
-			&:hover {
+			&:hover,
+			&:focus {
 				transform: translateX(-0.5rem);
 			}
 		}
 		&:last-child {
 			right: 1rem;
-			&:hover {
+			&:hover,
+			&:focus {
 				transform: translateX(0.5rem);
 			}
+		}
+		&:focus {
+			outline: none;
+		}
+		&:disabled {
+			display: none;
 		}
 	}
 `;
@@ -52,6 +60,7 @@ function PokemonTop({ children, color }: PokemonTopProps) {
 			<button
 				title="Prev"
 				onClick={() => history.push(`/pokemon/${id - 1}`)}
+				disabled={id === 1}
 			>
 				<ArrowLeft size={24} color="currentColor" />
 			</button>
