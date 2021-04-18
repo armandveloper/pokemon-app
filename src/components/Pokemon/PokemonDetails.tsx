@@ -11,12 +11,20 @@ interface PokemonDetailsProps {
 
 const PokemonDetailsStyled = styled.div`
 	color: #fff;
+	@media (min-width: 56.25em) {
+		margin-top: 6rem;
+	}
 	> div:first-of-type {
 		margin-top: 3rem;
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		div {
 			text-align: center;
+			span {
+				@media (min-width: 56.25em) {
+					font-size: 2.4rem;
+				}
+			}
 		}
 		p {
 			font-size: 3rem;
@@ -24,6 +32,12 @@ const PokemonDetailsStyled = styled.div`
 			margin: 0;
 			span {
 				font-size: 1.8rem;
+			}
+			@media (min-width: 56.25em) {
+				font-size: 4.5rem;
+				span {
+					font-size: 3rem;
+				}
 			}
 		}
 	}

@@ -7,7 +7,7 @@ interface PokemonHeaderProps {
 }
 
 const PokemonHeaderStyled = styled.header`
-	padding: 1.5rem 2rem;
+	padding: 1.5rem 0;
 	position: relative;
 	z-index: 1;
 	display: flex;

@@ -25,6 +25,9 @@ const PokemonPageStyled = styled.div`
 		margin-top: 4rem;
 		text-align: center;
 		text-transform: capitalize;
+		@media (min-width: 56.25em) {
+			font-size: 5.2rem;
+		}
 	}
 `;
 

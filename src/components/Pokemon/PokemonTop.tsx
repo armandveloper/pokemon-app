@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import styled from 'styled-components';
 import { ArrowLeft, ArrowRight } from 'react-feather';
+import Wrapper from '../layout/Wrapper';
 
 interface PokemonTopProps {
 	children: ReactNode;
@@ -12,8 +13,8 @@ const PokemonTopStyled = styled.div<{ color: string }>`
 	color: ${(props) => props.color};
 	height: 35rem;
 	position: relative;
-	transtion: color 0.5s ease;
-	> button {
+	transition: color 0.5s ease;
+	> div > button {
 		background: rgba(255, 255, 255, 0.45);
 		border: none;
 		border-radius: 50%;
@@ -47,6 +48,17 @@ const PokemonTopStyled = styled.div<{ color: string }>`
 		&:disabled {
 			display: none;
 		}
+		@media (min-width: 75em) {
+			&:first-child {
+				margin-left: calc((100vw - 120rem) / 2);
+			}
+			&:last-child {
+				margin-right: calc((100vw - 120rem) / 2);
+			}
+		}
+	}
+	.pos-r {
+		position: relative;
 	}
 `;
 
@@ -57,21 +69,24 @@ function PokemonTop({ children, color }: PokemonTopProps) {
 
 	return (
 		<PokemonTopStyled color={color}>
-			<button
-				title="Prev"
-				onClick={() => history.push(`/pokemon/${id - 1}`)}
-				disabled={id === 1}
-			>
-				<ArrowLeft size={24} color="currentColor" />
-			</button>
-			{children}
-			<button title="Next">
-				<ArrowRight
-					size={24}
-					color="currentColor"
-					onClick={() => history.push(`/pokemon/${id + 1}`)}
-				/>
-			</button>
+			<Wrapper>
+				<button
+					title="Prev"
+					onClick={() => history.push(`/pokemon/${id - 1}`)}
+					disabled={id === 1}
+				>
+					<ArrowLeft size={24} color="currentColor" />
+				</button>
+
+				{children}
+				<button title="Next">
+					<ArrowRight
+						size={24}
+						color="currentColor"
+						onClick={() => history.push(`/pokemon/${id + 1}`)}
+					/>
+				</button>
+			</Wrapper>
 		</PokemonTopStyled>
 	);
 }

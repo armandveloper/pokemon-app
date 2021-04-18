@@ -15,6 +15,8 @@ const ToastStyled = styled.div<{ type: string }>`
 		props.type === 'success' ? 'rgb(75, 192, 122)' : '#D50000'};
 	border-radius: 0.5rem;
 	font-size: 1.6rem;
+	max-width: 120rem;
+	margin: 0 auto;
 	padding: 1rem 2.5rem;
 	text-align: center;
 	width: 100%;

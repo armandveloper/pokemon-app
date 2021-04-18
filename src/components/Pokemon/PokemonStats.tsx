@@ -7,12 +7,19 @@ interface PokemonStatsProps {
 }
 
 const PokemonStatsStyled = styled.div`
+	@media (min-width: 56.25em) {
+		margin-top: 4rem;
+	}
 	h2 {
 		text-align: center;
+		@media (min-width: 56.25em) {
+			font-size: 3.2rem;
+		}
 	}
 	ul {
 		list-style: none;
-		margin: 0;
+		max-width: 90rem;
+		margin: 0 auto;
 		padding: 0;
 	}
 	li {
@@ -21,6 +28,10 @@ const PokemonStatsStyled = styled.div`
 		grid-template-columns: 35% 1fr;
 		gap: 2rem;
 		align-items: center;
+		@media (min-width: 56.25em) {
+			grid-template-columns: 30% 1fr;
+			gap: 4rem;
+		}
 		div:first-child {
 			display: flex;
 			justify-content: space-between;
@@ -29,7 +40,7 @@ const PokemonStatsStyled = styled.div`
 			background-color: #f4f5f4;
 			border-radius: 0.4rem;
 			height: 0.4rem;
-      overflow: hidden;
+			overflow: hidden;
 			div {
 				border-radius: 0.4rem;
 				width: 0;

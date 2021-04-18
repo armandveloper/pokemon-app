@@ -9,6 +9,9 @@ const PokemonTypeListStyled = styled.ul`
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-around;
+	@media (min-width: 56.25em) {
+		justify-content: center;
+	}
 	li {
 		flex: 0.45;
 		border-radius: 2rem;
@@ -16,6 +19,12 @@ const PokemonTypeListStyled = styled.ul`
 		text-align: center;
 		user-select: none;
 		text-transform: capitalize;
+		@media (min-width: 56.25em) {
+			flex: 0.2;
+			&:not(:last-child) {
+				margin-right: 1rem;
+			}
+		}
 	}
 `;
 
