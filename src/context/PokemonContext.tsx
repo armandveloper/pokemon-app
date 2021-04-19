@@ -17,6 +17,7 @@ interface PokemonContextInterface {
 	page: string;
 	currentPokemon: PokemonInfo;
 	pokemonNotFoundError: boolean;
+	isNetworkError: boolean;
 	getPokemon(): void;
 	setPage(): void;
 	getPokemonById(id: number): Promise<void>;
@@ -30,14 +31,21 @@ export const PokemonContext = createContext<PokemonContextInterface>(
 export const PokemonProvider = ({ children }: { children: ReactNode }) => {
 	const [pokemonList, setPokemonList] = useState<Result[]>([]);
 	const [page, setPage] = useState('https://pokeapi.co/api/v2/pokemon');
+	const [isNetworkError, setNetworkError] = useState(false);
 
 	const nextPageRef = useRef<string | null>(null);
 
 	const getPokemon = useCallback(async () => {
-		const resp = await fetch(page);
-		const data: ResourceGeneralResponse = await resp.json();
-		nextPageRef.current = data.next;
-		setPokemonList((pokemon) => [...pokemon, ...data.results]);
+		try {
+			const resp = await fetch(page);
+			if (resp.status === 404) throw new Error('Network Error');
+			const data: ResourceGeneralResponse = await resp.json();
+			nextPageRef.current = data.next;
+			setPokemonList((pokemon) => [...pokemon, ...data.results]);
+		} catch (err) {
+			console.log(err);
+			setNetworkError(true);
+		}
 	}, [page]);
 
 	const nextPage = useCallback(() => setPage(nextPageRef.current || ''), []);
@@ -78,6 +86,7 @@ export const PokemonProvider = ({ children }: { children: ReactNode }) => {
 				getPokemonById,
 				pokemonNotFoundError,
 				setPokemonError,
+				isNetworkError,
 			}}
 		>
 			{children}

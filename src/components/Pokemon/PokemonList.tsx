@@ -5,6 +5,7 @@ import { PokemonContext } from '../../context/PokemonContext';
 import Wrapper from '../layout/Wrapper';
 import Spinner from '../ui/Spinner';
 import PokemonCard from './PokemonCard';
+import { Info } from 'react-feather';
 
 const PokemonListStyled = styled.ul`
 	list-style: none;
@@ -17,7 +18,9 @@ const PokemonListStyled = styled.ul`
 `;
 
 function PokemonList() {
-	const { pokemonList, setPage, page } = useContext(PokemonContext);
+	const { isNetworkError, pokemonList, setPage, page } = useContext(
+		PokemonContext
+	);
 
 	const spinnerRef = useRef<HTMLDivElement>(null);
 
@@ -48,20 +51,34 @@ function PokemonList() {
 
 	return (
 		<Wrapper>
-			<PokemonListStyled>
-				{pokemonList.map(({ name, url }: Result) => (
-					<PokemonCard
-						key={name}
-						name={name}
-						pokemonId={+url.split('/')[6]}
+			{isNetworkError ? (
+				<div className="network-error">
+					<h1>Oops... something went wrong</h1>
+					<div>
+						<Info size={72} color="currentColor" />
+					</div>
+					<button onClick={() => window.location.reload()}>
+						Try reload the page
+					</button>
+				</div>
+			) : (
+				<>
+					<PokemonListStyled>
+						{pokemonList.map(({ name, url }: Result) => (
+							<PokemonCard
+								key={name}
+								name={name}
+								pokemonId={+url.split('/')[6]}
+							/>
+						))}
+					</PokemonListStyled>
+					<Spinner
+						ref={spinnerRef}
+						align="center"
+						className={page ? 'visible' : 'hidden'}
 					/>
-				))}
-			</PokemonListStyled>
-			<Spinner
-				ref={spinnerRef}
-				align="center"
-				className={page ? 'visible' : 'hidden'}
-			/>
+				</>
+			)}
 		</Wrapper>
 	);
 }
