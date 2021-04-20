@@ -1,3 +1,3 @@
 # Pokémon App
 
-Pokédex App
+![Preview](./preview.png)
